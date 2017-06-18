@@ -1,12 +1,20 @@
 // let words = ['aaa','aba','abc','acd'];
 // let words = ['dad'];
-let words = ['add','are','ace'];
+// let words = ['add','are','ace'];
+const readline = require('readline');
+const fs = require('fs');
 
 //Initialize our store of words
 let store = {};
 
-//For each word in our dictionary
-words.forEach((word) => {
+//Create an interface to stream our word list
+const lineReader = readline.createInterface({
+  // input: fs.createReadStream('words_alpha.txt')
+  input: fs.createReadStream('first-five-thousand.txt')
+});
+
+//For each line in our word list
+lineReader.on('line', function(word) {
 
   //Cache the word length
   let wordLength = word.length;
@@ -89,7 +97,7 @@ words.forEach((word) => {
         else {
 
           //Add point one to the count for the current character (this is to help resolve ties later on)
-          characterCounts[character] += .1;
+          characterCounts[character] = parseFloat((characterCounts[character]+.1).toFixed(2));
 
         }
       }
@@ -113,9 +121,20 @@ words.forEach((word) => {
     store[possibleState] = addCounts(characterCounts, store[possibleState]);
 
   }
+
 });
 
-console.log(store);
+//When we're all done reading the file!
+lineReader.on('close', function(word) {
+
+  //Write our store to a file
+  fs.writeFile('dictionary.txt', JSON.stringify(store), (err) => {
+    if (err) throw err;
+    console.log('The file has been saved!');
+  });
+
+});
+
 
 //Left pad a string with zero's up to a certain length
 function pad(number, length) {
