@@ -5,11 +5,7 @@ const fs = require('fs');
 let store = {};
 
 //Create an interface to stream our word list
-const lineReader = readline.createInterface({
-
-  input: fs.createReadStream('words_alpha.txt')
-
-});
+const lineReader = readline.createInterface({input: fs.createReadStream('words_alpha.txt')});
 
 //For each line in our word list
 lineReader.on('line', (word) => {
@@ -43,6 +39,11 @@ lineReader.on('close', () => {
 
   //Once the stream is initialized
   stream.once('open', (err) => {
+
+    //If an error occured
+    if(err) {
+      console.log(err);
+    }
 
     //For every size a word could be
     for(let i = 1; i<=31; i++) {

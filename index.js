@@ -8,29 +8,22 @@ let remainingLetters = '[eariotnslcudpmhgbfywkvxzjq]';
 let usedLetters = '';
 
 //Start a new game of hangman
-rp({method: 'POST', uri: 'http://hangman-api.herokuapp.com/hangman', json: true})
+rp({method: 'POST', uri: 'http://hangman-api.herokuapp.com/hangman', json: true}).
 
 //When the new game is created
-.then((response) => {
+then((response) => {
 
   //Store the token to send with the next request
-  let token = response.token;
-
-  //Store the game state in a variable
-  let gameState = response.hangman;
+  let {token, hangman: gameState} = response;
 
   //Initialize a variable to keep track of the number of wrong guesses
   let incorrectGuesses = 0;
 
   //Read in our pre-formmated word list
-  const lineReader = readline.createInterface({
-
-    input: fs.createReadStream('wordlists.txt')
-
-  });
+  const lineReader = readline.createInterface({input: fs.createReadStream('wordlists.txt')});
 
   //Start on line number 1
-  lineNumber = 1;
+  let lineNumber = 1;
 
   //For each line in our word list
   lineReader.on('line', (text) => {
@@ -58,25 +51,29 @@ rp({method: 'POST', uri: 'http://hangman-api.herokuapp.com/hangman', json: true}
       let guess = nextGuess(gameState, usedLetters, remainingLetters, wordList);
 
       //Update our word list to the reduced set
-      wordList = guess.wordList;
+      ({wordList} = guess);
 
       console.log('Game state: '+gameState+' Next guess: '+guess.letter);
 
       //Guess another letter
-      await rp({method: 'PUT', uri: 'http://hangman-api.herokuapp.com/hangman', json: true, qs: {
-        token: token,
-        letter: guess.letter
-      }})
-      .then((response) => {
+      await rp(
+        {
+          method: 'PUT',
+          uri: 'http://hangman-api.herokuapp.com/hangman',
+          json: true,
+          qs: {
+            token,
+            letter: guess.letter
+          }
+        }
+      ).
+      then((newResponse) => {
 
-        //Update the token
-        token = response.token;
-
-        //Update the game state
-        gameState = response.hangman;
+        //Update the token and game state
+        ({token, hangman: gameState} = newResponse);
 
         //If we guessed wrong
-        if(!response.correct) {
+        if(!newResponse.correct) {
 
           //Increment the number of incorrect guesses
           incorrectGuesses++;
@@ -89,8 +86,8 @@ rp({method: 'POST', uri: 'http://hangman-api.herokuapp.com/hangman', json: true}
         //Add the letter we just guessed to the list of already guessed letters
         usedLetters += guess.letter;
 
-      })
-      .catch(function (err) {
+      }).
+      catch(function (err) {
         console.log('Some sort of error occurred', err);
       });
 
@@ -115,7 +112,7 @@ rp({method: 'POST', uri: 'http://hangman-api.herokuapp.com/hangman', json: true}
 
   });
 
-})
-.catch(function (err) {
+}).
+catch(function (err) {
   console.log('Some sort of error occurred', err);
 });

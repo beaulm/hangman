@@ -1,15 +1,76 @@
 const readline = require('readline');
 const fs = require('fs');
 
+
+/**
+* @desc pad() Left pads a string with zeros up to a given length
+*
+* @param {string} [number] - Number to pad (ex: 101)
+* @param {integer} [length] - Length to pad to (ex: 8)
+*
+* @return {string} - Padded number (ex: 00000101)
+*/
+function pad(number, length) {
+
+  while(number.length < length) {
+
+    number = '0' + number;
+
+  }
+
+  return number;
+
+}
+
+
+/**
+* @desc addCounts() Do an additive join of two objects with letter frequencies
+* This will be more efficient if the countsOne object is "smaller" (has fewer keys)
+*
+* @param {object} [countsOne] - Object containing letter frequencies (ex: {a: 1, b: 3})
+* @param {object} [countsTwo] - Object containing letter frequencies (ex: {a: 2, b: 5})
+*
+* @return {object} - Object containing letter frequencies (ex: {a: 3, b: 8})
+*/
+function addCounts(countsOne, countsTwo) {
+
+  //Get all the keys of the first object
+  let keys = Object.keys(countsOne);
+
+  //Get the total number of keys in the first object
+  let i = keys.length;
+
+  //For each key in the countsOne object
+  while(i--) {
+
+    //If countsTwo already has a corresponding key
+    if(countsTwo.hasOwnProperty(keys[i])) {
+
+      //Add the value from countsOne to the corresponding value in countsTwo
+      countsTwo[keys[i]] += countsOne[keys[i]];
+
+    }
+
+    //If countsTwo doesn't already have a corresponding key
+    else {
+
+      //Add a new key to countsTwo with the value from countsOne
+      countsTwo[keys[i]] = countsOne[keys[i]];
+
+    }
+
+  }
+
+  //Return countsTwo
+  return countsTwo;
+}
+
+
 //Initialize our store of words
 let store = {};
 
 //Create an interface to stream our word list
-const lineReader = readline.createInterface({
-
-  input: fs.createReadStream('test-words.txt')
-
-});
+const lineReader = readline.createInterface({input: fs.createReadStream('test-words.txt')});
 
 //For each line in our word list
 lineReader.on('line', function(word) {
@@ -18,10 +79,10 @@ lineReader.on('line', function(word) {
   let wordLength = word.length;
 
   //For one until the square of the length of the word (we're gonna do a kinda binary bitmask to get all possible substrings)
-  for(let i=0, end=Math.pow(2,wordLength)-1; i<end; i++) {
+  for(let i=0, end=Math.pow(2, wordLength)-1; i<end; i++) {
 
     //Get the binary representation of the current count (i.e. 5 => 101)
-    let binary = i.toString(2); //TODO: Cache all possible binary strings we might encounter.
+    let binary = i.toString(2);
 
     //Pad our binary number with zero's until it's the same length as the word (If the word was 'House' and we're on number 5, we want 00101)
     binary = pad(binary, wordLength);
@@ -132,58 +193,12 @@ lineReader.on('close', function() {
   //Write our store to a file
   fs.writeFile('dictionary-tiny.txt', JSON.stringify(store), (err) => {
 
-    if (err) throw err;
+    if(err) {
+      throw err;
+    }
 
     console.log('The file has been saved!');
 
   });
 
 });
-
-
-//Left pad a string with zero's up to a certain length
-function pad(number, length) {
-
-  while(number.length < length) {
-
-    number = '0' + number;
-
-  }
-
-  return number;
-
-}
-
-//This will be more efficient if the countsOne object is "smaller" (has fewer keys)
-function addCounts(countsOne, countsTwo) {
-
-  //Get all the keys of the first object
-  let keys = Object.keys(countsOne);
-
-  //Get the total number of keys in the first object
-  let i = keys.length;
-
-  //For each key in the countsOne object
-  while(i--) {
-
-    //If countsTwo already has a corresponding key
-    if(countsTwo.hasOwnProperty(keys[i])) {
-
-      //Add the value from countsOne to the corresponding value in countsTwo
-      countsTwo[keys[i]] += countsOne[keys[i]];
-
-    }
-
-    //If countsTwo doesn't already have a corresponding key
-    else {
-
-      //Add a new key to countsTwo with the value from countsOne
-      countsTwo[keys[i]] = countsOne[keys[i]];
-
-    }
-
-  }
-
-  //Return countsTwo
-  return countsTwo;
-}

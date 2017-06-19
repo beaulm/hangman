@@ -110,7 +110,7 @@ function getMostCommonLetter(letterFrequencies, usedLetters) {
 function nextGuess(gameState, usedLetters, remainingLetters, wordList) {
 
   //Replace all underscores in the game state with our bracket string
-  let regex = new RegExp('\,('+gameState.replace(/_/g, remainingLetters)+')\,', 'gi');
+  let regex = new RegExp(',('+gameState.replace(/_/g, remainingLetters)+'),', 'gi');
 
   //Get all possible words for the current game state
   let possibleWords = wordList.match(regex);
@@ -119,7 +119,7 @@ function nextGuess(gameState, usedLetters, remainingLetters, wordList) {
   if(possibleWords.length === 0) {
 
     //Send back whatever the next most common letter in english is
-    return {letter: remainingLetters.charAt(1), wordList: wordList};
+    return {letter: remainingLetters.charAt(1), wordList};
 
   }
 
@@ -132,7 +132,7 @@ function nextGuess(gameState, usedLetters, remainingLetters, wordList) {
   //Find the most commonly used letter based on our letterFrequencies object
   let highestLetter = getMostCommonLetter(letterFrequencies, usedLetters);
 
-  return {letter: highestLetter, wordList: wordList};
+  return {letter: highestLetter, wordList};
 
 }
 

@@ -1,4 +1,5 @@
-const redis = require('redis'), client = redis.createClient();
+const redis = require('redis');
+const client = redis.createClient();
 
 //Cache all possible binary numbers up to 31 bits
 
@@ -6,7 +7,7 @@ const redis = require('redis'), client = redis.createClient();
 for(let bits=0; bits<=31; bits++) {
 
   //For every possible binary number of the current length
-  for(let num=0; num<Math.pow(2,bits)-1; num++) {
+  for(let num=0; num<Math.pow(2, bits)-1; num++) {
 
     //Get the current binary number
     let binary = num.toString(2);
