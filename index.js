@@ -19,7 +19,7 @@ then((response) => {
   //Initialize a variable to keep track of the number of wrong guesses
   let incorrectGuesses = 0;
 
-  //Read in our pre-formmated word list
+  //Read in our pre-formatted word list
   const lineReader = readline.createInterface({input: fs.createReadStream('wordlists.txt')});
 
   //Start on line number 1

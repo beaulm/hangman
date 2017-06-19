@@ -17,7 +17,7 @@ function getLetterFrequencies(possibleWords) {
     //Store the current word in a variable
     let word = possibleWords[i];
 
-    //Initialize an object to keep track of letters which have already occured in the current word
+    //Initialize an object to keep track of letters which have already occurred in the current word
     let usedCharacters = {};
 
     //For each character in the current word
