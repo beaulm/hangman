@@ -17,7 +17,7 @@ function getWordList(wordLength) {
     if(typeof wordLength !== 'number' || !Number.isInteger(wordLength) || wordLength < 1 || wordLength > 31) {
 
       //Reject the promise right off the bat
-      reject(`Invalid wordLength (${wordLength}) supplied to getWordList. Make sure wordLength is an integer between 1 and 31 inclusive`);
+      reject(new Error(`Invalid wordLength (${wordLength}) supplied to getWordList. Make sure wordLength is an integer between 1 and 31 inclusive`));
 
     }
 
@@ -53,7 +53,7 @@ function getWordList(wordLength) {
       if(lineNumber < wordLength) {
 
         //Reject the promise
-        reject('Unable to get an initial list of words');
+        reject(new Error('Unable to get an initial list of words'));
 
       }
 
