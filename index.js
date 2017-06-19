@@ -2,7 +2,7 @@ const getWordList = require('./get-word-list');
 const rp = require('request-promise');
 const nextGuess = require('./next-guess');
 
-let wordList = '';
+let wordList = {list: ''};
 let remainingLetters = '[eariotnslcudpmhgbfywkvxzjq]';
 let usedLetters = '';
 
@@ -19,7 +19,7 @@ then(async (response) => {
   let incorrectGuesses = 0;
 
   //Get all the words that are the right length for this game state
-  wordList = await getWordList(gameState.length);
+  wordList.list = await getWordList(gameState.length);
 
   //As long as the game state has an underscore and we haven't made five or more incorrect guesses
   while(gameState.indexOf('_') !== -1 && incorrectGuesses < 5) {

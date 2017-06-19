@@ -103,7 +103,7 @@ function getMostCommonLetter(letterFrequencies, usedLetters) {
 * @param {string} [gameState] - String representing the current game state (ex: h__s_)
 * @param {string} [usedLetters] - List of already used letters
 * @param {string} [remainingLetters] - List of unused letters in brackets (ex: [kvxzjq])
-* @param {string} [wordList] - List of words that could be solutions to the current game state, separated by commas (ex: ,ace,,add,,are,,dad,)
+* @param {object} [wordList] - An object with a property which is a list of words that could be solutions to the current game state, separated by commas (ex: ,ace,,add,,are,,dad,)
 *
 * @return {object} - The letter to guess next and the resulting word list
 */
@@ -113,7 +113,7 @@ function nextGuess(gameState, usedLetters, remainingLetters, wordList) {
   let regex = new RegExp(',('+gameState.replace(/_/g, remainingLetters)+'),', 'gi');
 
   //Get all possible words for the current game state
-  let possibleWords = wordList.match(regex);
+  let possibleWords = wordList.list.match(regex);
 
   //If we didn't match any words in our dictionary
   if(possibleWords === null) {
@@ -124,7 +124,7 @@ function nextGuess(gameState, usedLetters, remainingLetters, wordList) {
   }
 
   //Update our word list to the new (reduced) set of words
-  wordList = possibleWords.join('');
+  wordList.list = possibleWords.join('');
 
   //Get the letter frequencies for all letters in all the words in our list
   let letterFrequencies = getLetterFrequencies(possibleWords);
