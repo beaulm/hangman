@@ -116,7 +116,7 @@ function nextGuess(gameState, usedLetters, remainingLetters, wordList) {
   let possibleWords = wordList.match(regex);
 
   //If we didn't match any words in our dictionary
-  if(possibleWords.length === 0) {
+  if(possibleWords === null) {
 
     //Send back whatever the next most common letter in english is
     return {letter: remainingLetters.charAt(1), wordList};
