@@ -64,8 +64,9 @@ then(async (response) => {
       usedLetters += guess.letter;
 
     }).
-    catch(function (err) {
-      console.log('Some sort of error occurred', err);
+    catch((err) => {
+      console.log('There was a problem guessing the next letter.', err);
+      incorrectGuesses = 5;
     });
 
   }
@@ -88,6 +89,6 @@ then(async (response) => {
   }
 
 }).
-catch(function (err) {
-  console.log('Some sort of error occurred', err);
+catch((err) => {
+  console.log('There was an error starting a new game.', err);
 });

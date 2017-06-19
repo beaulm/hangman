@@ -38,6 +38,19 @@ function getWordList(wordLength) {
 
     });
 
+    //When we're done with the file
+    lineReader.on('close', () => {
+
+      //If we tried getting a list of words longer than any in our dictionary
+      if(lineNumber < wordLength) {
+
+        //Reject the promise
+        reject('Unable to get an initial list of words');
+
+      }
+
+    });
+
   });
 
 }
