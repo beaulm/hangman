@@ -34,6 +34,9 @@ then((response) => {
       //Update our list of possible words
       wordList = text;
 
+      //Stop reading the file
+      lineReader.close();
+
     }
 
     //Move on to the next line
