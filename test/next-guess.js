@@ -6,19 +6,19 @@ describe('nextGuess', () => {
 
   it('should give you a letter and wordlist with proper input', () => {
 
-    let guess = nextGuess('a__', 'a', '[eriotnslcudpmhgbfywkvxzjq]', ',ace,,add,,are,,dad,');
+    let guess = nextGuess('a__', 'a', '[eriotnslcudpmhgbfywkvxzjq]', {list: ',ace,,add,,are,,dad,'});
 
     assert.equal('e', guess.letter);
-    assert.equal(',ace,,add,,are,', guess.wordList);
+    assert.equal(',ace,,add,,are,', guess.wordList.list);
 
   });
 
   it('should still give you a letter and wordlist even if the gamestate doesn\'t match anything in our wordlist', () => {
 
-    let guess = nextGuess('c__', 'c', '[eariotnsludpmhgbfywkvxzjq]', ',ace,,add,,are,,dad,');
+    let guess = nextGuess('c__', 'c', '[eariotnsludpmhgbfywkvxzjq]', {list: ',ace,,add,,are,,dad,'});
 
     assert.equal('e', guess.letter);
-    assert.equal(',ace,,add,,are,,dad,', guess.wordList);
+    assert.equal(',ace,,add,,are,,dad,', guess.wordList.list);
 
   });
 
