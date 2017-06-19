@@ -119,7 +119,7 @@ function nextGuess(gameState, usedLetters, remainingLetters, wordList) {
   if(possibleWords.length === 0) {
 
     //Send back whatever the next most common letter in english is
-    return {letter: remainingLetters.charAt(1);, wordList: wordList};
+    return {letter: remainingLetters.charAt(1), wordList: wordList};
 
   }
 
