@@ -127,7 +127,7 @@ lineReader.on('line', function(word) {
 });
 
 //When we're all done reading the file!
-lineReader.on('close', function(word) {
+lineReader.on('close', function() {
 
   //Write our store to a file
   fs.writeFile('dictionary-tiny.txt', JSON.stringify(store), (err) => {

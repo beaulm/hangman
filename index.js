@@ -1,12 +1,17 @@
+const readline = require('readline');
+const fs = require('fs');
 const rp = require('request-promise');
+const nextGuess = require('./next-guess');
 
-let letters = 'EARIOTNSLCUDPMHGBFYWKVXZJQ'.split('');
+let wordList = '';
+let remainingLetters = '[eariotnslcudpmhgbfywkvxzjq]';
+let usedLetters = '';
 
 //Start a new game of hangman
 rp({method: 'POST', uri: 'http://hangman-api.herokuapp.com/hangman', json: true})
 
 //When the new game is created
-.then(async (response) => {
+.then((response) => {
 
   //Store the token to send with the next request
   let token = response.token;
@@ -17,58 +22,98 @@ rp({method: 'POST', uri: 'http://hangman-api.herokuapp.com/hangman', json: true}
   //Initialize a variable to keep track of the number of wrong guesses
   let incorrectGuesses = 0;
 
-  //As long as the game state has an underscore and we haven't made five or more incorrect guesses
-  while(gameState.indexOf('_') !== -1 && incorrectGuesses < 5) {
+  //Read in our pre-formmated word list
+  const lineReader = readline.createInterface({
 
-    //Get the next letter to guess
-    let guess = letters.shift();
+    input: fs.createReadStream('wordlists.txt')
 
-    console.log('Game state: '+gameState+' Next guess: '+guess);
+  });
 
-    //Guess another letter
-    await rp({method: 'PUT', uri: 'http://hangman-api.herokuapp.com/hangman', json: true, qs: {
-      token: token,
-      letter: guess
-    }})
-    .then((response) => {
+  //Start on line number 1
+  lineNumber = 1;
 
-      //Update the token
-      token = response.token;
+  //For each line in our word list
+  lineReader.on('line', (text) => {
 
-      //Update the game state
-      gameState = response.hangman;
+    //When we reach the line number that matches the size of our gameState
+    if(lineNumber === gameState.length) {
 
-      //If we guessed wrong
-      if(!response.correct) {
+      //Update our list of possible words
+      wordList = text;
 
-        //Increment the number of incorrect guesses
-        incorrectGuesses++;
+    }
 
-      }
+    //Move on to the next line
+    lineNumber++
 
-    })
-    .catch(function (err) {
-      console.log('Some sort of error occurred', err);
-    });
+  });
 
-  }
+  //When we've got our list of possible words
+  lineReader.on('close', async () => {
 
-  //If the game state has no underscores
-  if(gameState.indexOf('_') === -1) {
+    //As long as the game state has an underscore and we haven't made five or more incorrect guesses
+    while(gameState.indexOf('_') !== -1 && incorrectGuesses < 5) {
 
-    //We won!!!
-    console.log('We won!!!');
-    console.log('The word was '+gameState);
+      //Get the next letter to guess
+      let guess = nextGuess(gameState, usedLetters, remainingLetters, wordList);
 
-  }
+      //Update our word list to the reduced set
+      wordList = guess.wordList;
 
-  //If we made five or more wrong guesses
-  if(incorrectGuesses >= 5) {
+      console.log('Game state: '+gameState+' Next guess: '+guess.letter);
 
-    //We lost :(
-    console.log('We lost :(');
+      //Guess another letter
+      await rp({method: 'PUT', uri: 'http://hangman-api.herokuapp.com/hangman', json: true, qs: {
+        token: token,
+        letter: guess.letter
+      }})
+      .then((response) => {
 
-  }
+        //Update the token
+        token = response.token;
+
+        //Update the game state
+        gameState = response.hangman;
+
+        //If we guessed wrong
+        if(!response.correct) {
+
+          //Increment the number of incorrect guesses
+          incorrectGuesses++;
+
+        }
+
+        //Remove the letter we just guessed from the list of letters still available to guess
+        remainingLetters = remainingLetters.replace(guess.letter, '');
+
+        //Add the letter we just guessed to the list of already guessed letters
+        usedLetters += guess.letter;
+
+      })
+      .catch(function (err) {
+        console.log('Some sort of error occurred', err);
+      });
+
+    }
+
+    //If the game state has no underscores
+    if(gameState.indexOf('_') === -1) {
+
+      //We won!!!
+      console.log('We won!!!');
+      console.log('The word was '+gameState);
+
+    }
+
+    //If we made five or more wrong guesses
+    if(incorrectGuesses >= 5) {
+
+      //We lost :(
+      console.log('We lost :(');
+
+    }
+
+  });
 
 })
 .catch(function (err) {

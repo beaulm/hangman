@@ -1,0 +1,86 @@
+function nextGuess(gameState, usedLetters, remainingLetters, wordList) {
+
+  //Replace all underscores in the game state with our bracket string
+  let regex = new RegExp('\,('+gameState.replace(/_/g, remainingLetters)+')\,', 'gi');
+
+  //Get all possible words for the current game state
+  let possibleWords = wordList.match(regex);
+
+  //Update our word list to the new (reduced) set of words
+  wordList = possibleWords.join('');
+
+  //Initialize an object to keep track of letter frequencies
+  let letterFrequencies = {a: 0, b: 0, c: 0, d: 0, e: 0, f: 0, g: 0, h: 0, i: 0, j: 0, k: 0, l: 0, m: 0, n: 0, o: 0, p: 0, q: 0, r: 0, s: 0, t: 0, u: 0, v: 0, w: 0, x: 0, y: 0, z: 0};
+
+  //For each word in our list of possible words
+  let i = possibleWords.length;
+  while(i--) {
+
+    //Store the current word in a variable
+    let word = possibleWords[i];
+
+    //Initialize an object to keep track of letters which have already occured in the current word
+    let usedCharacters = {};
+
+    //For each character in the current word
+    let j = word.length-2;
+    while(j > 0) {
+
+      //Store the current character in a variable
+      let character = word.charAt(j);
+
+      //If this letter hasn't appeared in this word yet
+      if(!usedCharacters.hasOwnProperty(character)) {
+
+        //Add one million to the value for this letter in our character count object
+        letterFrequencies[character] += 1000000;
+
+        //Add this letter to the list of letters which have already appeared in this word
+        usedCharacters[character] = true;
+
+      }
+
+      //If this letter has already appeared in this word
+      else {
+
+        //Add one to the value for this letter in our character count object
+        letterFrequencies[character] += 1;
+
+      }
+
+      //Move on to the next letter
+      j--;
+
+    }
+
+  }
+
+  //Initialize variables to keep track of the most common letter so far
+  let highestCount = 0;
+  let highestLetter = '';
+
+  //Get all the keys of the letterFrequencies object
+  let keys = Object.keys(letterFrequencies);
+
+  //Get the total number of keys in the letterFrequencies object
+  let k = keys.length;
+
+  //For each letter in our letterFrequencies object
+  while(k--) {
+
+    //If it's not in the already used letter list and it's got a higher value than any letter so far
+    if(usedLetters.indexOf(keys[k]) === -1 && letterFrequencies[keys[k]] > highestCount) {
+
+      //Update our variables which keep track of the most commonly used letter
+      highestCount = letterFrequencies[keys[k]];
+      highestLetter = keys[k];
+
+    }
+
+  }
+
+  return {letter: highestLetter, wordList: wordList};
+
+}
+
+module.exports = nextGuess;
