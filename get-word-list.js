@@ -13,6 +13,14 @@ function getWordList(wordLength) {
   //Return a promise that will resolve after we've gotten the list of words of the appropriate length
   return new Promise((resolve, reject) => {
 
+    //If wordlength isn't an integer between 1 and 31 inclusive
+    if(typeof wordLength !== 'number' || !Number.isInteger(wordLength) || wordLength < 1 || wordLength > 31) {
+
+      //Reject the promise right off the bat
+      reject(`Invalid wordLength (${wordLength}) supplied to getWordList. Make sure wordLength is an integer between 1 and 31 inclusive`);
+
+    }
+
     //Read in our pre-formatted word list
     const lineReader = readline.createInterface({input: fs.createReadStream('wordlists.txt')});
 

@@ -109,6 +109,26 @@ function getMostCommonLetter(letterFrequencies, usedLetters) {
 */
 function nextGuess(gameState, usedLetters, remainingLetters, wordList) {
 
+  //Validate the gameState
+  if(typeof gameState !== 'string' || gameState.length === 0 || gameState.indexOf('_') === -1) {
+    return new Error('gameState should be a string with at least one underscore');
+  }
+
+  //Validate the usedLetters
+  if(typeof usedLetters !== 'string') {
+    return new Error('usedLetters should be a string');
+  }
+
+  //Validate the remainingLetters
+  if(typeof remainingLetters !== 'string' || remainingLetters.length < 3 || remainingLetters.charAt(0) !== '[' || remainingLetters.substr(remainingLetters.length-1) !== ']') {
+    return new Error('remainingLetters should be a string of letters inside brackets');
+  }
+
+  //Validate wordList
+  if(typeof wordList !== 'object' || !wordList.hasOwnProperty('list') || typeof wordList.list !== 'string' || wordList.list.indexOf(',') === -1) {
+    return new Error('wordList should be an object with a `list` property which is a comma separated list of words');
+  }
+
   //Replace all underscores in the game state with our bracket string
   let regex = new RegExp(',('+gameState.replace(/_/g, remainingLetters)+'),', 'gi');
 

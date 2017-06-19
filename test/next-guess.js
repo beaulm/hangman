@@ -1,4 +1,4 @@
-let {assert} = require('chai');
+let {assert, expect} = require('chai');
 let {describe, it} = require('mocha');
 let nextGuess = require('../next-guess');
 
@@ -19,6 +19,52 @@ describe('nextGuess', () => {
 
     assert.equal('e', guess.letter);
     assert.equal(',ace,,add,,are,,dad,', guess.wordList.list);
+
+  });
+
+  it('should return an error if you give it bad inputs', () => {
+
+    let guess = nextGuess(1, 'c', '[eariotnsludpmhgbfywkvxzjq]', {list: ',ace,,add,,are,,dad,'});
+    expect(guess).to.be.an.instanceof(Error);
+
+    guess = nextGuess('', 'c', '[eariotnsludpmhgbfywkvxzjq]', {list: ',ace,,add,,are,,dad,'});
+    expect(guess).to.be.an.instanceof(Error);
+
+    guess = nextGuess('ace', 'c', '[eariotnsludpmhgbfywkvxzjq]', {list: ',ace,,add,,are,,dad,'});
+    expect(guess).to.be.an.instanceof(Error);
+
+    guess = nextGuess('c__', {}, '[eariotnsludpmhgbfywkvxzjq]', {list: ',ace,,add,,are,,dad,'});
+    expect(guess).to.be.an.instanceof(Error);
+
+    guess = nextGuess('c__', 'c', 'eariotnsludpmhgbfywkvxzjq]', {list: ',ace,,add,,are,,dad,'});
+    expect(guess).to.be.an.instanceof(Error);
+
+    guess = nextGuess('c__', 'c', '[eariotnsludpmhgbfywkvxzjq', {list: ',ace,,add,,are,,dad,'});
+    expect(guess).to.be.an.instanceof(Error);
+
+    guess = nextGuess('c__', 'c', '[]', {list: ',ace,,add,,are,,dad,'});
+    expect(guess).to.be.an.instanceof(Error);
+
+    guess = nextGuess('c__', 'c', [], {list: ',ace,,add,,are,,dad,'});
+    expect(guess).to.be.an.instanceof(Error);
+
+    guess = nextGuess('c__', 'c', '[eariotnsludpmhgbfywkvxzjq]', {});
+    expect(guess).to.be.an.instanceof(Error);
+
+    guess = nextGuess('c__', 'c', '[eariotnsludpmhgbfywkvxzjq]', {list: ''});
+    expect(guess).to.be.an.instanceof(Error);
+
+    guess = nextGuess('c__', 'c', '[eariotnsludpmhgbfywkvxzjq]', {list: 1});
+    expect(guess).to.be.an.instanceof(Error);
+
+    guess = nextGuess('c__', 'c', '[eariotnsludpmhgbfywkvxzjq]', 1);
+    expect(guess).to.be.an.instanceof(Error);
+
+    guess = nextGuess('c__', 'c', '[eariotnsludpmhgbfywkvxzjq]', {list: 'ace'});
+    expect(guess).to.be.an.instanceof(Error);
+
+    guess = nextGuess('c__', 'c', '[eariotnsludpmhgbfywkvxzjq]', {list: 'ace|add'});
+    expect(guess).to.be.an.instanceof(Error);
 
   });
 

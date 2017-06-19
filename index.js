@@ -27,6 +27,14 @@ then(async (response) => {
     //Get the next letter to guess
     let guess = nextGuess(gameState, usedLetters, remainingLetters, wordList);
 
+    //If there was a problem getting the next letter to guess
+    if(guess instanceof Error) {
+
+      //Tell the user about it
+      throw guess;
+
+    }
+
     //Update our word list to the reduced set
     ({wordList} = guess);
 
