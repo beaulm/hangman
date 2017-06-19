@@ -1,10 +1,10 @@
 /**
-	* @desc getLetterFrequencies() Builds an map of letters and their frequencies for a given word list
-	*
-	* @param {array} [possibleWords] - Array of words
-	*
-	* @return {object} - A map of letters and thier frequencies in the given word list
-	*/
+* @desc getLetterFrequencies() Builds an map of letters and their frequencies for a given word list
+*
+* @param {array} [possibleWords] - Array of words
+*
+* @return {object} - A map of letters and thier frequencies in the given word list
+*/
 function getLetterFrequencies(possibleWords) {
 
   //Initialize an object to keep track of letter frequencies
@@ -59,13 +59,13 @@ function getLetterFrequencies(possibleWords) {
 }
 
 /**
-	* @desc getMostCommonLetter() Given a letter frequencies object, find the most common letter not already used
-	*
-	* @param {object} [letterFrequencies] - Map of letter frequencies
-	* @param {string} [usedLetters] - List of already used letters
-	*
-	* @return {string} - The most common, not already guessed letter
-	*/
+* @desc getMostCommonLetter() Given a letter frequencies object, find the most common letter not already used
+*
+* @param {object} [letterFrequencies] - Map of letter frequencies
+* @param {string} [usedLetters] - List of already used letters
+*
+* @return {string} - The most common, not already guessed letter
+*/
 function getMostCommonLetter(letterFrequencies, usedLetters) {
 
   //Initialize variables to keep track of the most common letter so far
@@ -98,15 +98,15 @@ function getMostCommonLetter(letterFrequencies, usedLetters) {
 }
 
 /**
-	* @desc nextGuess() Figure out what letter to guess next (and what the resulting list of possible words will be)
-	*
-	* @param {string} [gameState] - String representing the current game state (ex: h__s_)
-	* @param {string} [usedLetters] - List of already used letters
-	* @param {string} [remainingLetters] - List of unused letters in brackets (ex: [kvxzjq])
-	* @param {string} [wordList] - List of words that could be solutions to the current game state, separated by commas (ex: ,ace,,add,,are,,dad,)
-	*
-	* @return {object} - The letter to guess next and the resulting word list
-	*/
+* @desc nextGuess() Figure out what letter to guess next (and what the resulting list of possible words will be)
+*
+* @param {string} [gameState] - String representing the current game state (ex: h__s_)
+* @param {string} [usedLetters] - List of already used letters
+* @param {string} [remainingLetters] - List of unused letters in brackets (ex: [kvxzjq])
+* @param {string} [wordList] - List of words that could be solutions to the current game state, separated by commas (ex: ,ace,,add,,are,,dad,)
+*
+* @return {object} - The letter to guess next and the resulting word list
+*/
 function nextGuess(gameState, usedLetters, remainingLetters, wordList) {
 
   //Replace all underscores in the game state with our bracket string
